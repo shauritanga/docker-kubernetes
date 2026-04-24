@@ -3,12 +3,9 @@ kind: Kustomization
 namespace: claims-platform
 resources:
   - ../../base
-  - hpa.yaml
-  - pdb.yaml
-  - networkpolicy.yaml
 images:
   - name: claims-api
     newName: ghcr.io/shauritanga/claims-api
-    newTag: stable
+    newTag: local
 patches:
   - path: deployment-patch.yaml

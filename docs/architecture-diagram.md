@@ -8,7 +8,7 @@ flowchart LR
     Repo[Claims API Repo]
     Docker[Docker Image]
     Compose[Docker Compose]
-    Minikube[Minikube Cluster]
+    Kubeadm[kubeadm Cluster]
     Ingress[Ingress]
     API[Claims API Pod]
     Service[Service]
@@ -20,20 +20,20 @@ flowchart LR
     Repo --> Docker
     Repo --> CI
     Docker --> Compose
-    Docker --> Minikube
+    Docker --> Kubeadm
 
     Compose --> API
     Compose --> Postgres
     Compose --> Redis
 
-    Minikube --> Ingress
+    Kubeadm --> Ingress
     Ingress --> Service
     Service --> API
     API --> Postgres
     API --> Redis
 
     CI --> Docker
-    CI --> Minikube
+    CI --> Kubeadm
 ```
 
 ## How To Explain It
@@ -41,7 +41,7 @@ flowchart LR
 - The developer writes code in the claims API repo.
 - Docker turns that code into a portable image.
 - Docker Compose is the local learning step for running the app with Postgres and Redis.
-- Minikube is the Kubernetes learning step for running the same app with cluster primitives like Deployment, Service, and Ingress.
+- kubeadm is the Kubernetes learning step for running the same app with cluster primitives like Deployment, Service, and Ingress.
 - GitHub Actions validates code, container build, and Kubernetes configuration before delivery.
 
 ## Workshop Talking Points

@@ -12,8 +12,8 @@ Check that the required tools are available:
 - [ ] `node --version`
 - [ ] `docker --version`
 - [ ] `docker compose version`
-- [ ] `minikube version`
 - [ ] `kubectl version --client`
+- [ ] `kubectl get nodes`
 
 Install project dependencies:
 
@@ -104,29 +104,30 @@ Failure exercise:
 - [ ] Observe readiness behavior
 - [ ] Restart Postgres and confirm recovery
 
-## Module 3: Kubernetes Foundations With Minikube
+## Module 3: Kubernetes Foundations With kubeadm
 
 Reference: [docs/modules/03-kubernetes-foundations.md](/home/mcb0168e/Development/docker-example/docs/modules/03-kubernetes-foundations.md)
 
 Commands:
 
 ```bash
-minikube start
-minikube addons enable ingress
-minikube image build -t claims-api:local .
+kubectl get nodes
+docker build -t ghcr.io/shauritanga/claims-api:local .
+docker push ghcr.io/shauritanga/claims-api:local
 kubectl apply -f k8s/secrets/claims-api-secrets.local.yaml
-kubectl apply -k k8s/base
+kubectl apply -k k8s/overlays/kubeadm
 kubectl get pods -n claims-platform
 kubectl get svc -n claims-platform
 kubectl get ingress -n claims-platform
 ```
 
-- [ ] Start Minikube
-- [ ] Enable ingress addon
-- [ ] Build the image inside Minikube
+- [ ] Confirm the kubeadm cluster is ready
+- [ ] Confirm an ingress controller is installed
+- [ ] Build and push the image to a registry reachable from the kubeadm nodes
+- [ ] Update the kubeadm overlay image name/tag if using a different registry
 - [ ] Review `k8s/base`
 - [ ] Create the local secret
-- [ ] Apply the base manifests
+- [ ] Apply the kubeadm overlay
 - [ ] Verify pods
 - [ ] Verify service
 - [ ] Verify ingress
@@ -255,7 +256,7 @@ You are done when you can:
 - [ ] explain the pain Kubernetes solves
 - [ ] build and run the API in Docker
 - [ ] run the local stack with Compose
-- [ ] deploy the app to Minikube
+- [ ] deploy the app to a kubeadm cluster
 - [ ] explain each core Kubernetes object used in the repo
 - [ ] observe a failed rollout and recover with rollback
 - [ ] explain the purpose of HPA, PDB, and NetworkPolicy

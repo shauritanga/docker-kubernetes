@@ -8,7 +8,7 @@ The teaching application is a Node/Express claims API with `members`, `hospitals
 
 - build and inspect production-oriented container images
 - run a multi-service local backend stack with Docker Compose
-- deploy the service to Minikube with Kubernetes manifests
+- deploy the service to a kubeadm Kubernetes cluster with Kubernetes manifests
 - work with probes, Services, Ingress, ConfigMaps, and Secrets
 - understand safer production patterns such as HPA, PDB, and NetworkPolicy
 - practice rollout debugging, rollback, and basic scaling checks
@@ -20,8 +20,9 @@ The teaching application is a Node/Express claims API with `members`, `hospitals
 
 - Node.js 22+
 - Docker with `docker compose`
-- Minikube
 - `kubectl`
+- access to a kubeadm cluster
+- an image registry reachable from the kubeadm nodes
 
 ### Local Development Stack
 
@@ -40,6 +41,7 @@ npm test
 
 ```bash
 kubectl kustomize k8s/base
+kubectl kustomize k8s/overlays/kubeadm
 kubectl kustomize k8s/overlays/production
 ```
 
@@ -53,7 +55,7 @@ For a short workshop visual, use [docs/architecture-diagram.md](/home/mcb0168e/D
 
 1. [Container foundations](/home/mcb0168e/Development/docker-example/docs/modules/01-container-foundations.md)
 2. [Docker Compose local stack](/home/mcb0168e/Development/docker-example/docs/modules/02-compose-local-stack.md)
-3. [Kubernetes foundations with Minikube](/home/mcb0168e/Development/docker-example/docs/modules/03-kubernetes-foundations.md)
+3. [Kubernetes foundations with kubeadm](/home/mcb0168e/Development/docker-example/docs/modules/03-kubernetes-foundations.md)
 4. [Production-oriented Kubernetes patterns](/home/mcb0168e/Development/docker-example/docs/modules/04-kubernetes-production-patterns.md)
 5. [Rollouts, failures, scaling, and rollback](/home/mcb0168e/Development/docker-example/docs/modules/05-kubernetes-rollout-operations.md)
 6. [CI/CD with GitHub Actions](/home/mcb0168e/Development/docker-example/docs/modules/06-cicd-github-actions.md)

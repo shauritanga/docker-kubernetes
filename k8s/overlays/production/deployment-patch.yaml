@@ -9,6 +9,7 @@ spec:
       containers:
         - name: claims-api
           image: claims-api:stable
+          imagePullPolicy: Always
           resources:
             requests:
               cpu: 100m

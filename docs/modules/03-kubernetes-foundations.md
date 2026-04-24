@@ -1,8 +1,8 @@
-# Module 3: Kubernetes Foundations With Minikube
+# Module 3: Kubernetes Foundations With kubeadm
 
 ## Goal
 
-Deploy the claims API to Minikube and map Docker/Compose concepts into Kubernetes primitives.
+Deploy the claims API to a kubeadm cluster and map Docker/Compose concepts into Kubernetes primitives.
 
 ## The Developer Pain Before Kubernetes
 
@@ -48,33 +48,44 @@ This module teaches the foundational Kubernetes objects that turn containers int
 
 ## Tasks
 
-1. Start Minikube:
+1. Confirm your kubeadm cluster is ready:
 
 ```bash
-minikube start
-minikube addons enable ingress
+kubectl get nodes
 ```
 
-2. Build the image into Minikube:
+2. Install an ingress controller if your kubeadm cluster does not already have one:
 
 ```bash
-minikube image build -t claims-api:local .
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=120s
 ```
 
-3. Review the base manifests under [`k8s/base`](/home/mcb0168e/Development/docker-example/k8s/base).
-4. Apply the base manifests:
+3. Build and push an image that the kubeadm nodes can pull:
 
 ```bash
-kubectl apply -k k8s/base
+docker build -t ghcr.io/shauritanga/claims-api:local .
+docker push ghcr.io/shauritanga/claims-api:local
 ```
 
-5. Create a real secret from the example:
+4. If you use a different registry, update `newName` and `newTag` in [`k8s/overlays/kubeadm/kustomization.yaml`](/home/mcb0168e/Development/docker-example/k8s/overlays/kubeadm/kustomization.yaml).
+5. Review the base manifests under [`k8s/base`](/home/mcb0168e/Development/docker-example/k8s/base).
+6. Create a real secret from the example:
 
 ```bash
 kubectl apply -f k8s/secrets/claims-api-secrets.local.yaml
 ```
 
-6. Verify rollout:
+7. Apply the kubeadm overlay:
+
+```bash
+kubectl apply -k k8s/overlays/kubeadm
+```
+
+8. Verify rollout:
 
 ```bash
 kubectl get pods -n claims-platform

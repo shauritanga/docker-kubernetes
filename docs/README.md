@@ -12,7 +12,7 @@ This project teaches backend developers how to take a real service from local co
 
 1. [Container foundations](./modules/01-container-foundations.md)
 2. [Local multi-service development with Docker Compose](./modules/02-compose-local-stack.md)
-3. [Kubernetes foundations with Minikube](./modules/03-kubernetes-foundations.md)
+3. [Kubernetes foundations with kubeadm](./modules/03-kubernetes-foundations.md)
 4. [Production-oriented Kubernetes configuration](./modules/04-kubernetes-production-patterns.md)
 5. [Rollouts, failures, scaling, and rollback](./modules/05-kubernetes-rollout-operations.md)
 6. [CI/CD with GitHub Actions](./modules/06-cicd-github-actions.md)
@@ -21,8 +21,9 @@ This project teaches backend developers how to take a real service from local co
 
 - Node.js 22+
 - Docker Engine with `docker compose`
-- Minikube
 - `kubectl`
+- access to a kubeadm cluster
+- an image registry reachable from the kubeadm nodes
 
 ## Learning Approach
 

@@ -11,7 +11,7 @@ By the end of the workshop, learners should be able to:
 - explain why Docker exists beyond "packaging apps"
 - explain why Kubernetes exists beyond "running containers"
 - run a backend service with Docker and Docker Compose
-- deploy that service to Minikube
+- deploy that service to a kubeadm cluster
 - explain the purpose of Deployment, Service, ConfigMap, Secret, Ingress, probes, HPA, PDB, and NetworkPolicy
 - detect and recover from a failed rollout
 - explain how CI/CD reduces delivery risk
@@ -60,7 +60,8 @@ Ask learners to complete these before the session:
 - install Node.js 22+
 - install Docker with `docker compose`
 - install `kubectl`
-- install Minikube
+- have access to a kubeadm cluster
+- have access to an image registry reachable from the kubeadm nodes
 - clone the repository
 - run:
 
@@ -68,9 +69,10 @@ Ask learners to complete these before the session:
 npm install
 docker compose config
 kubectl version --client
+kubectl get nodes
 ```
 
-If time is limited, pre-warm Minikube for learners.
+If time is limited, pre-create the kubeadm cluster, install the ingress controller, and confirm learners can push to the registry used by the lab.
 
 ## How To Use The Repo During Teaching
 
@@ -266,7 +268,7 @@ Ask each learner to explain, without reading notes:
 Then ask them to perform:
 
 - a local Compose startup
-- a Minikube deployment
+- a kubeadm deployment
 - a broken rollout detection
 - a rollback recovery
 
