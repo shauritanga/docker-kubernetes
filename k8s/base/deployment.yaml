@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claims-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claims-api
+  template:
+    metadata:
+      labels:
+        app: claims-api
+    spec:
+      containers:
+        - name: claims-api
+          image: claims-api:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: claims-api-config
+            - secretRef:
+                name: claims-api-secrets
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20

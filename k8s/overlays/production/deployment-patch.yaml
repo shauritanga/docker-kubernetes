@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claims-api
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: claims-api
+          image: claims-api:stable
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
