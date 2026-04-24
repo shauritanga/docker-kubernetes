@@ -37,6 +37,8 @@ export function createApp() {
     res.json({ status: 'ok' });
   });
 
+  
+
   app.get('/health/ready', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ status: 'ready' });
