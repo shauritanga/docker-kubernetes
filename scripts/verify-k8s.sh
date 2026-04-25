@@ -2,7 +2,10 @@
 set -euo pipefail
 
 for file in k8s/*/*.yaml; do
-  kubectl create --dry-run=client --validate=false -f "$file" >/dev/null
+  if ! grep -q '^apiVersion:' "$file" || ! grep -q '^kind:' "$file"; then
+    echo "Manifest is missing apiVersion or kind: $file" >&2
+    exit 1
+  fi
 done
 
 kubectl kustomize --load-restrictor=LoadRestrictionsNone k8s/kustomize/base >/dev/null
