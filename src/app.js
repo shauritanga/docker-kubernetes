@@ -1,54 +1,93 @@
 import express from 'express';
-import { pool } from './db/pool.js';
-import { errorHandler } from './http/errors.js';
-import { createResourceRouter } from './http/resources.js';
+import pg from 'pg';
+import { config } from './config.js';
 
-function requestLogger(req, res, next) {
-  const startedAt = Date.now();
-  res.on('finish', () => {
-    const durationMs = Date.now() - startedAt;
-    console.log(
-      JSON.stringify({
-        message: 'request.completed',
-        method: req.method,
-        path: req.originalUrl,
-        statusCode: res.statusCode,
-        durationMs,
-      })
-    );
-  });
-  next();
-}
+const { Pool } = pg;
+
+const pool = new Pool({
+  host: config.databaseHost,
+  port: config.databasePort,
+  database: config.databaseName,
+  user: config.databaseUser,
+  password: config.databasePassword,
+  connectionTimeoutMillis: 1500,
+});
 
 export function createApp() {
   const app = express();
 
-  app.use(express.json());
-  app.use(requestLogger);
+  app.get('/healthz', (request, response) => {
+    response.json({ status: 'ok' });
+  });
 
-  app.get('/', (req, res) => {
-    res.json({
-      service: 'claims-api',
-      resources: ['members', 'hospitals', 'claims'],
+  app.get('/readyz', (request, response) => {
+    response.json({
+      status: 'ready',
+      databaseHost: config.databaseHost,
+      podName: config.podName,
     });
   });
 
-  app.get('/health/live', (req, res) => {
-    res.json({ status: 'ok' });
+  app.get(['/', '/api'], (request, response) => {
+    response.json({
+      app: config.appName,
+      message: config.message,
+      databaseHost: config.databaseHost,
+      podName: config.podName,
+    });
   });
 
-  
+  app.get('/work', (request, response) => {
+    const startedAt = Date.now();
+    let total = 0;
 
-  app.get('/health/ready', async (req, res) => {
-    await pool.query('SELECT 1');
-    res.json({ status: 'ready' });
+    while (Date.now() - startedAt < 100) {
+      total += Math.sqrt(total + 1);
+    }
+
+    response.json({
+      status: 'worked',
+      podName: config.podName,
+    });
   });
 
-  app.use('/api/members', createResourceRouter(express, 'members'));
-  app.use('/api/hospitals', createResourceRouter(express, 'hospitals'));
-  app.use('/api/claims', createResourceRouter(express, 'claims'));
+  app.get('/db-check', async (request, response) => {
+    const result = await checkDatabaseConnection();
 
-  app.use(errorHandler);
+    response.status(result.ok ? 200 : 503).json({
+      ...result,
+      databaseHost: config.databaseHost,
+      databasePort: config.databasePort,
+      podName: config.podName,
+    });
+  });
+
+  app.use((request, response) => {
+    response.status(404).json({ error: 'Not found' });
+  });
 
   return app;
+}
+
+export function closeDatabasePool() {
+  return pool.end();
+}
+
+function checkDatabaseConnection() {
+  return pool
+    .query('SELECT NOW() AS database_time')
+    .then((result) => {
+      return {
+        ok: true,
+        status: 'query-succeeded',
+        databaseTime: result.rows[0].database_time,
+      };
+    })
+    .catch((error) => {
+      return {
+        ok: false,
+        status: 'query-failed',
+        error: error.code || error.message,
+      };
+    });
 }

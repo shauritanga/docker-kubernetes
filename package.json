@@ -1,20 +1,17 @@
 {
-  "name": "docker-example",
+  "name": "kubernetes-beginner-lab",
   "version": "1.0.0",
-  "description": "Claims, hospitals, and members REST API",
+  "description": "Beginner-friendly Docker and Kubernetes tutorial lab",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "test": "node --test test/http.behavior.test.js test/validators.test.js",
-    "test:integration": "RUN_INTEGRATION_TESTS=1 node --test test/integration.api.test.js",
+    "test": "node --test",
     "verify:k8s": "bash scripts/verify-k8s.sh"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
-    "pg": "^8.16.3"
+    "pg": "^8.20.0"
   }
 }

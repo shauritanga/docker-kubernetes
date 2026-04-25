@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../01-namespace/namespace.yaml
+  - ../../02-config-and-secret/configmap.yaml
+  - ../../02-config-and-secret/secret.yaml
+  - ../../03-postgres/postgres.yaml
+  - ../../04-api-deployment/deployment.yaml
+  - ../../05-service/service.yaml
+  - ../../06-ingress/ingress.yaml
+  - ../../07-autoscaling/hpa.yaml

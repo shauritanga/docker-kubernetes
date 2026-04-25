@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: beginner-lab
+data:
+  APP_NAME: beginner-api
+  MESSAGE: Hello from a Kubernetes ConfigMap
+  DATABASE_HOST: postgres

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beginner-api-tls
+  namespace: beginner-lab
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - beginner.local
+      secretName: beginner-api-tls
+  rules:
+    - host: beginner.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: beginner-api
+                port:
+                  number: 80

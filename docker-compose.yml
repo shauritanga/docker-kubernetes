@@ -1,37 +1,35 @@
-version: "3.9"
 services:
-  app:
+  api:
     build: .
     environment:
-      NODE_ENV: development
       PORT: 8080
-      DATABASE_URL: postgres://claims_app:claims_app@postgres:5432/claims_db
+      APP_NAME: beginner-api-compose
+      MESSAGE: Hello from Docker Compose
+      DATABASE_HOST: postgres
+      POSTGRES_DB: beginner_db
+      POSTGRES_USER: beginner
+      POSTGRES_PASSWORD: beginner
     ports:
       - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_started
+
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: claims_db
-      POSTGRES_USER: claims_app
-      POSTGRES_PASSWORD: claims_app
+      POSTGRES_DB: beginner_db
+      POSTGRES_USER: beginner
+      POSTGRES_PASSWORD: beginner
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U claims_app -d claims_db"]
+      test: ["CMD-SHELL", "pg_isready -U beginner -d beginner_db"]
       interval: 5s
       timeout: 5s
       retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
 
 volumes:
   postgres_data:

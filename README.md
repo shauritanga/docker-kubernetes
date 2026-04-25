@@ -1,91 +1,46 @@
-# Enterprise Backend Docker And Kubernetes Lab
+# Beginner Docker And Kubernetes Lab
 
-This repository teaches backend developers how to take a real REST API from source code to container, local stack, Kubernetes deployment, rollout safety, and CI/CD validation.
+This project is a beginner-friendly tutorial for learning how a small web API moves from local code to Docker, Docker Compose, and Kubernetes.
 
-The teaching application is a Node/Express claims API with `members`, `hospitals`, and `claims`, backed by PostgreSQL and packaged for Docker, Docker Compose, and Kubernetes.
+The structure is inspired by the official Kubernetes tutorials:
 
-## What Learners Practice
+- Kubernetes Tutorials: https://kubernetes.io/docs/tutorials/
+- Kubernetes Basics: https://kubernetes.io/docs/tutorials/kubernetes-basics/
+- Stateless Applications: https://kubernetes.io/docs/tutorials/stateless-application/
+- Stateful Applications: https://kubernetes.io/docs/tutorials/stateful-application/
 
-- build and inspect production-oriented container images
-- run a multi-service local backend stack with Docker Compose
-- deploy the service to a kubeadm Kubernetes cluster with Kubernetes manifests
-- work with probes, Services, Ingress, ConfigMaps, and Secrets
-- understand safer production patterns such as HPA, PDB, and NetworkPolicy
-- practice rollout debugging, rollback, and basic scaling checks
-- connect local delivery steps to GitHub Actions CI
+## What You Will Learn
 
-## Quick Start
+- build and run a container image
+- run an API with PostgreSQL using Docker Compose
+- create Kubernetes objects one step at a time
+- understand Namespace, ConfigMap, Secret, Deployment, Service, Ingress, and probes
+- scale an API to multiple pods and observe Service load balancing
+- add a Horizontal Pod Autoscaler for automatic scaling
+- explore optional production topics: CI, persistent storage, NetworkPolicy, TLS, Kustomize, Helm, and database connectivity
+- troubleshoot common beginner errors
+- clean up everything safely
 
-### Prerequisites
+## Start Here
+
+Install tools first with [TOOLS-INSTALL.md](./TOOLS-INSTALL.md).
+
+Use [START-HERE.md](./START-HERE.md) as the main path.
+
+Read [Kubernetes Vocabulary For This Lab](./docs/00-vocabulary.md) before the Kubernetes commands if the words are new.
+
+Use [LAB-CHECKLIST.md](./LAB-CHECKLIST.md) when facilitating or tracking progress.
+
+## Requirements
 
 - Node.js 22+
-- Docker with `docker compose`
+- Docker with Docker Compose
+- Minikube
 - `kubectl`
-- access to a kubeadm cluster
-- an image registry reachable from the kubeadm nodes
 
-### Local Development Stack
+## Project Layout
 
-```bash
-npm install
-docker compose up --build
-```
-
-### Unit Tests
-
-```bash
-npm test
-```
-
-### Render Kubernetes Assets
-
-```bash
-kubectl kustomize k8s/base
-kubectl kustomize k8s/overlays/kubeadm
-kubectl kustomize k8s/overlays/production
-```
-
-## Learning Modules
-
-Start with [docs/README.md](/home/mcb0168e/Development/docker-example/docs/README.md).
-
-For a linear progress tracker, use [LAB-CHECKLIST.md](/home/mcb0168e/Development/docker-example/LAB-CHECKLIST.md).
-For instructor-led delivery, use [TRAINER-NOTES.md](/home/mcb0168e/Development/docker-example/TRAINER-NOTES.md).
-For a short workshop visual, use [docs/architecture-diagram.md](/home/mcb0168e/Development/docker-example/docs/architecture-diagram.md).
-
-1. [Container foundations](/home/mcb0168e/Development/docker-example/docs/modules/01-container-foundations.md)
-2. [Docker Compose local stack](/home/mcb0168e/Development/docker-example/docs/modules/02-compose-local-stack.md)
-3. [Kubernetes foundations with kubeadm](/home/mcb0168e/Development/docker-example/docs/modules/03-kubernetes-foundations.md)
-4. [Production-oriented Kubernetes patterns](/home/mcb0168e/Development/docker-example/docs/modules/04-kubernetes-production-patterns.md)
-5. [Rollouts, failures, scaling, and rollback](/home/mcb0168e/Development/docker-example/docs/modules/05-kubernetes-rollout-operations.md)
-6. [CI/CD with GitHub Actions](/home/mcb0168e/Development/docker-example/docs/modules/06-cicd-github-actions.md)
-
-## Application Summary
-
-### Health Endpoints
-
-- `GET /`
-- `GET /health/live`
-- `GET /health/ready`
-
-### Resource Endpoints
-
-- `GET|POST|PUT /api/members`
-- `GET|POST|PUT /api/hospitals`
-- `GET|POST|PUT /api/claims`
-
-### Default Local Environment
-
-```bash
-PORT=8080
-DATABASE_URL=postgres://claims_app:claims_app@localhost:5432/claims_db
-SHUTDOWN_TIMEOUT_MS=10000
-```
-
-## Repository Layout
-
-- [src](/home/mcb0168e/Development/docker-example/src): application code
-- [docs/modules](/home/mcb0168e/Development/docker-example/docs/modules): guided labs
-- [k8s/base](/home/mcb0168e/Development/docker-example/k8s/base): foundational manifests
-- [k8s/overlays/production](/home/mcb0168e/Development/docker-example/k8s/overlays/production): production-oriented additions
-- [.github/workflows](/home/mcb0168e/Development/docker-example/.github/workflows): CI/CD teaching assets
+- `src/`: small Express API used by the Docker and Kubernetes lessons
+- `k8s/`: numbered Kubernetes lessons
+- `docs/`: tutorial chapters
+- `scripts/verify-k8s.sh`: validates Kubernetes YAML with `kubectl`

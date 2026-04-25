@@ -1,53 +1,35 @@
-import http from 'node:http';
-import { createApp } from './app.js';
+import { closeDatabasePool, createApp } from './app.js';
 import { config } from './config.js';
-import { pool } from './db/pool.js';
-import { initializeSchema } from './db/schema.js';
 
-export async function startServer() {
-  await initializeSchema();
-  console.log(
-    JSON.stringify({
-      message: 'server.bootstrap.complete',
-      port: config.port,
-      nodeEnv: config.nodeEnv,
-      logLevel: config.logLevel,
-    })
-  );
-
+export function startServer() {
   const app = createApp();
-  const server = http.createServer(app);
 
-  server.listen(config.port, () => {
-    console.log(
-      JSON.stringify({
-        message: 'server.listening',
-        port: config.port,
-      })
-    );
-  });
+  let server;
 
-  let shuttingDown = false;
-
-  const shutdown = async (signal) => {
-    if (shuttingDown) {
+  const shutdown = async () => {
+    if (!server) {
       return;
     }
-    shuttingDown = true;
-    console.log(JSON.stringify({ message: 'server.shutdown.started', signal }));
+
     server.close(async () => {
-      await pool.end();
+      await closeDatabasePool();
       process.exit(0);
     });
-
-    setTimeout(() => {
-      console.error(JSON.stringify({ message: 'server.shutdown.timeout' }));
-      process.exit(1);
-    }, config.shutdownTimeoutMs).unref();
   };
 
-  process.on('SIGINT', () => shutdown('SIGINT'));
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 
-  return server;
+  return new Promise((resolve) => {
+    server = app.listen(config.port, () => {
+      console.log(
+        JSON.stringify({
+          message: 'server.listening',
+          port: config.port,
+          appName: config.appName,
+        })
+      );
+      resolve(server);
+    });
+  });
 }

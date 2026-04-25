@@ -1,0 +1,13 @@
+namespace: beginner-lab
+image:
+  repository: beginner-api
+  tag: local
+  pullPolicy: IfNotPresent
+replicaCount: 1
+service:
+  port: 80
+  targetPort: 8080
+config:
+  appName: beginner-api
+  message: Hello from Helm
+  databaseHost: postgres

@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-kubectl kustomize k8s/base >/tmp/claims-api-base.yaml
-kubectl kustomize k8s/overlays/kubeadm >/tmp/claims-api-kubeadm.yaml
-kubectl kustomize k8s/overlays/production >/tmp/claims-api-production.yaml
+for file in k8s/*/*.yaml; do
+  kubectl create --dry-run=client --validate=false -f "$file" >/dev/null
+done
 
-echo "Rendered base, kubeadm, and production overlays successfully."
+kubectl kustomize --load-restrictor=LoadRestrictionsNone k8s/kustomize/base >/dev/null
+kubectl kustomize --load-restrictor=LoadRestrictionsNone k8s/kustomize/overlays/networked >/dev/null
+
+if command -v helm >/dev/null 2>&1; then
+  helm template beginner-api helm/beginner-api >/dev/null
+else
+  echo "Helm is not installed; skipped Helm template validation."
+fi
+
+echo "All Kubernetes tutorial manifests passed local validation."

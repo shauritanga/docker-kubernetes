@@ -3,11 +3,12 @@ FROM node:22-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev
 
-COPY . .
-RUN addgroup -S nodejs && adduser -S apiuser -G nodejs && chown -R apiuser:nodejs /app
+COPY src ./src
+COPY index.js ./
 
-USER apiuser
+USER node
 EXPOSE 8080
+
 CMD ["npm", "start"]

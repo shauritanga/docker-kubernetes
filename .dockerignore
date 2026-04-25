@@ -1,4 +1,4 @@
 node_modules
-npm-debug.log_
-coverage
+npm-debug.log
 .git
+.codex
